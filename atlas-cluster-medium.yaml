@@ -1,0 +1,52 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: atlas-cluster-medium
+  title: Atlas Cluster (Medium)
+  description: Deploy a medium MongoDB Atlas cluster.
+spec:
+  type: service
+  owner: team:platform
+  parameters:
+    - title: Cluster Configuration
+      required:
+        - clusterName
+        - projectName
+        - region
+      properties:
+        clusterName:
+          title: Cluster Name
+          type: string
+          description: Unique name for the MongoDB Atlas cluster.
+        projectName:
+          title: Project Name
+          type: string
+          description: MongoDB Atlas project to associate the cluster with.
+        region:
+          title: Region
+          type: string
+          enum:
+            - US_EAST_1
+            - US_WEST_2
+            - EU_CENTRAL_1
+  steps:
+    - id: generate-tfvars
+      name: Generate Terraform Variables
+      action: fetch:template
+      input:
+        url: ./terraform/variables
+        values:
+          cluster_name: ${{ parameters.clusterName }}
+          project_name: ${{ parameters.projectName }}
+          region: ${{ parameters.region }}
+    - id: commit-config
+      name: Commit Configuration
+      action: publish:github
+      input:
+        repoUrl: https://github.com/your-org/terraform-atlas-configs
+        branch: main
+        filePath: variables/${{ parameters.clusterName }}.tfvars
+        content: |
+          cluster_name = "${{ parameters.clusterName }}"
+          project_name = "${{ parameters.projectName }}"
+          region = "${{ parameters.region }}"
