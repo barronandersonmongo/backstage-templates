@@ -1,0 +1,11 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Location
+metadata:
+  name: landing-zone-templates
+  description: A collection of Landing Zone templates
+spec:
+  type: url
+  targets:
+    - https://github.com/barronandersonmongo/backstage-templates/blob/main/atlas-cluster-small.yaml
+    - https://github.com/barronandersonmongo/backstage-templates/blob/main/atlas-cluster-medium.yaml
+    - https://github.com/barronandersonmongo/backstage-templates/blob/main/atlas-cluster-large.yaml
